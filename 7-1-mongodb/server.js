@@ -184,21 +184,40 @@
  *  This is the default behavior of Mongoose.
  */
 
-// import mongoose
+import mongoose from "mongoose";
 
-// establish connection
+mongoose
+  .connect("mongodb+srv://HasanDB:<db_password>@cluster0.rygtjue.mongodb.net/TestDB")
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.error("MongoDB connection error:", error));
 
+const studentSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  major: String,
+});
 
-// define schema
+const Student = mongoose.model("Student", studentSchema);
 
+async function createStudents() {
+  await Student.insertMany([
+    { name: "Ali", age: 21, major: "CS" },
+    { name: "Sara", age: 23, major: "SE" },
+  ]);
+  console.log("Inserted students");
+}
 
-// create document
+async function readStudents() {
+  const all = await Student.find();
+  console.log(all);
+}
 
+async function updateStudent() {
+  await Student.updateOne({ name: "Ali" }, { age: 22 });
+  console.log("Updated Ali");
+}
 
-// read document
-
-
-// update document
-
-
-// delete document
+async function deleteStudent() {
+  await Student.deleteOne({ name: "Sara" });
+  console.log("Deleted Sara");
+}
